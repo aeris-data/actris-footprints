@@ -10,8 +10,6 @@ import numpy as np
 import shutil
 import math
 import numpy.ma as ma
-import softio
-import fpsim
 
 FLEXPART_ROOT   = "/usr/local/flexpart_v10.4_3d7eebf"
 FLEXPART_EXE    = "/usr/local/flexpart_v10.4_3d7eebf/src/FLEXPART"
@@ -538,8 +536,8 @@ def prepare_working_dir(working_dir: str) -> None:
     if not os.path.exists(working_dir):
         try:
             os.mkdir(f"{working_dir}")
-        except e:
-            LOGGER.error(e)
+        except error:
+            LOGGER.error(error)
             return 1
     if not os.path.exists(f"{working_dir}/options"):
         os.mkdir(f"{working_dir}/options")
