@@ -3,9 +3,9 @@ From: ubuntu:20.04
 
 %files
     ./flexpart_makefile /usr/local/makefile
-    ./fpout /usr/local/pylibs/
-    ./fpsim /usr/local/pylibs/
-    ./common /usr/local/pylibs/
+    ./common /usr/local/footprints/
+    ./xarray_extras /usr/local/footprints/
+    ./fpout /usr/local/footprints/
 
 %environment
     export LANG=C.UTF-8
@@ -17,26 +17,21 @@ From: ubuntu:20.04
 %post
     apt-get update -y && apt-get upgrade -y && apt-get install -y software-properties-common && DEBIAN_FRONTEND="noninteractive" TZ="Europe" apt-get install -y tzdata
     apt-get -q -y install build-essential git cmake software-properties-common wget g++ gfortran autoconf libtool automake flex bison curl \
-        libbz2-dev libssl-dev libreadline-dev libsqlite3-dev tk-dev ruby libnetcdf-dev libnetcdff-dev libeccodes-dev nano && \
+        libbz2-dev libssl-dev libreadline-dev libsqlite3-dev tk-dev ruby libnetcdf-dev libnetcdff-dev libeccodes-dev nano wget python3-virtualenv && \
     apt-get -q clean && \
     rm -rf /var/lib/apt/lists/*
     ulimit -s unlimited
+    alias ll='ls --color=auto -alF' >> /etc/bash.bashrc
 
-    # Install Mamba
-    wget https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh
-    bash Mambaforge-Linux-x86_64.sh -b -p /opt/mamba
-    rm -f Mambaforge-Linux-x86_64.sh
-    export PATH=/opt/mamba/bin:$PATH
-    mamba config --remove channels defaults
-    mamba config --append channels conda-forge/label/dev
-    mamba install -y -c conda-forge python numpy scipy eccodes hdf5 netCDF4 matplotlib cartopy pandas xarray
+    # Install micromamba
+    "${SHELL}" <(curl -L micro.mamba.pm/install.sh) 
+    # check how to install without interactive truc
+    eval "$(micromamba shell hook --shell bash)"
+    micromamba activate
 
-    # Install aux python libs
-    cd /usr/local/pylibs/fpout; python setup.py develop
-    cd /usr/local/pylibs/fpsim; python setup.py develop
-    cd /usr/local/pylibs/common; python setup.py develop
+    micromamba create -y -n actris_env numpy scipy eccodes hdf5 netCDF4 matplotlib cartopy pandas xarray
 
-    # Install eccodes
+    # # Install eccodes
     mkdir -p /usr/local
     cd /usr/local
     wget https://confluence.ecmwf.int/download/attachments/45757960/eccodes-2.32.1-Source.tar.gz?api=v2
@@ -49,10 +44,11 @@ From: ubuntu:20.04
     make install
     rm "/usr/local/eccodes-2.32.1-Source.tar.gz?api=v2"
     rm -r /usr/local/eccodes-2.32.1-Source
+    micromamba activate actris_env
     pip install eccodes
     python3 -m eccodes selfcheck
 
-    # Install FLEXPART
+    # # Install FLEXPART
     cd /usr/local
     wget https://www.flexpart.eu/downloads/66
     tar xvf 66
@@ -66,4 +62,15 @@ From: ubuntu:20.04
     cp /usr/local/makefile ./
     make ncf=yes
 
-    alias ll='ls --color=auto -alF' >> /etc/bash.bashrc
+    micromamba create -y -n footprints_env xarray pandas numpy zarr netCDF4 h5py scipy h5netcdf dask
+
+    micromamba create -y -n softio_env pandas xarray numpy tqdm scipy hvplot dask toolz holoviews geoviews cartopy netCDF4 h5py
+    cd /usr/local
+    git clone https://github.com/iagos-dc/soft-io.git
+    cd /usr/local/soft-io
+    micromamba activate softio_env
+    pip install -e .
+    
+%runscript
+    eval "$(micromamba shell hook --shell bash)"
+    micromamba activate
