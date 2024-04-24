@@ -34,39 +34,43 @@ def apply_softio(flexpart_output: str, softio_output_dir: str) -> str:
     filename = os.path.basename(flexpart_output)
     station = filename.split("-")[0]
     date    = filename.split("-")[1]
+    softio_output_file = f"{softio_output_dir}/softio-{filename}"
     logger.info(f"Processing station {station} for the date {date}")
-    try:
-        fp_ds = fpsim.open_fp_dataset(flexpart_output)
-        alt   = fp_ds.RELZZ1.values[0]
-        ds_res = xr.Dataset()
+    if not os.path.exists(softio_output_file):
+        try:
+            fp_ds = fpsim.open_fp_dataset(flexpart_output)
+            alt   = fp_ds.RELZZ1.values[0]
+            ds_res = xr.Dataset()
 
-        logger.info("Calculating GFAS inventory")
-        gfas_ds = softio.get_co_contrib(emission_inventory="gfas", fpsim_ds=fp_ds, time_granularity='3h')
-        gfas_ds = gfas_ds.sum('time').squeeze()
-        gfas_ds = gfas_ds.assign_coords({"height":alt,
-                                         "station_id": STATIONS_CODE[station]}).expand_dims(["height",
-                                                                              "station_id",
-                                                                              "release_time"]).set_coords(["height",
-                                                                                                   "station_id",
-                                                                                                   "release_time"])
+            logger.info("Calculating GFAS inventory")
+            gfas_ds = softio.get_co_contrib(emission_inventory="gfas", fpsim_ds=fp_ds, time_granularity='3h')
+            gfas_ds = gfas_ds.sum('time').squeeze()
+            gfas_ds = gfas_ds.assign_coords({"height":alt,
+                                            "station_id": STATIONS_CODE[station]}).expand_dims(["height",
+                                                                                "station_id",
+                                                                                "release_time"]).set_coords(["height",
+                                                                                                    "station_id",
+                                                                                                    "release_time"])
 
-        logger.info("Calculating CEDS2 inventory")
-        ceds_ds = softio.get_co_contrib(emission_inventory="ceds2", fpsim_ds=fp_ds, time_granularity='3h')
-        ceds_ds = ceds_ds.sum('time').squeeze()
-        ceds_ds = ceds_ds.assign_coords({"height":alt,
-                                         "station_id": STATIONS_CODE[station]}).expand_dims(["height",
-                                                                              "station_id",
-                                                                              "release_time"]).set_coords(["height",
-                                                                                                   "station_id",
-                                                                                                   "release_time"])
+            logger.info("Calculating CEDS2 inventory")
+            ceds_ds = softio.get_co_contrib(emission_inventory="ceds2", fpsim_ds=fp_ds, time_granularity='3h')
+            ceds_ds = ceds_ds.sum('time').squeeze()
+            ceds_ds = ceds_ds.assign_coords({"height":alt,
+                                            "station_id": STATIONS_CODE[station]}).expand_dims(["height",
+                                                                                "station_id",
+                                                                                "release_time"]).set_coords(["height",
+                                                                                                    "station_id",
+                                                                                                    "release_time"])
 
-        ds_res = xr.concat([gfas_ds, ceds_ds], dim=pd.Index(['GFAS', 'CEDS'], name='em_inv'))
-        softio_output_file = f"{softio_output_dir}/softio-{filename}"
-        ds_res.to_netcdf(softio_output_file)
+            ds_res = xr.concat([gfas_ds, ceds_ds], dim=pd.Index(['GFAS', 'CEDS'], name='em_inv'))
+            
+            ds_res.to_netcdf(softio_output_file)
+            return softio_output_file
+        except Exception as e:
+            logger.error(e)
+            return ""
+    else:
         return softio_output_file
-    except Exception as e:
-        logger.error(e)
-        return ""
 
 def add_to_database(softio_file: str, softio_database: str) -> int:
     """
