@@ -7,20 +7,14 @@ import sys
 import glob
 import os
 import logging
+import json
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - [%(levelname)s] %(message)s',
                     datefmt='%d/%m/%Y %H:%M:%S')
 logger = logging.getLogger(__name__)
 
-STATIONS_CODE = {"PicDuMidi":"PDM",
-                 "PuyDeDome":"PUY",
-                 "SIRTA":"SAC",
-                 "ObservatoirePerenne":"OPE",
-                 "Maido":"RUN",
-                 "Lamto":"LTO"}
-
-def apply_softio(flexpart_output: str, softio_output_dir: str) -> str:
+def apply_softio(flexpart_output: str, softio_output_dir: str, station_short_name: str) -> str:
     """
     This function apply SOFT-IO to the given FLEXPART output.
 
@@ -46,7 +40,7 @@ def apply_softio(flexpart_output: str, softio_output_dir: str) -> str:
             gfas_ds = softio.get_co_contrib(emission_inventory="gfas", fpsim_ds=fp_ds, time_granularity='3h')
             gfas_ds = gfas_ds.sum('time').squeeze()
             gfas_ds = gfas_ds.assign_coords({"height":alt,
-                                            "station_id": STATIONS_CODE[station]}).expand_dims(["height",
+                                            "station_id": station_short_name}).expand_dims(["height",
                                                                                 "station_id",
                                                                                 "release_time"]).set_coords(["height",
                                                                                                     "station_id",
@@ -56,7 +50,7 @@ def apply_softio(flexpart_output: str, softio_output_dir: str) -> str:
             ceds_ds = softio.get_co_contrib(emission_inventory="ceds2", fpsim_ds=fp_ds, time_granularity='3h')
             ceds_ds = ceds_ds.sum('time').squeeze()
             ceds_ds = ceds_ds.assign_coords({"height":alt,
-                                            "station_id": STATIONS_CODE[station]}).expand_dims(["height",
+                                            "station_id": station_short_name}).expand_dims(["height",
                                                                                 "station_id",
                                                                                 "release_time"]).set_coords(["height",
                                                                                                     "station_id",
@@ -111,6 +105,7 @@ if __name__=="__main__":
 
     Args:
         -f / --file   : path to the FLEXPART output netCDF file
+        -n / --name   : short name of the ACTRIS station (same as in the JSON configuration file)
         -d / --dir    : path to the directory where to store the output SOFT-IO file
         -o / --output : path to the SOFT-IO merged database file where to add new data
     """
@@ -120,11 +115,13 @@ if __name__=="__main__":
     parser = argparse.ArgumentParser(description="Applying SOFT-IO to the FLEXPART output for the ACTRIS stations",
                                      formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument("-f", "--file", type=str, help="Path to the FLEXPART output netCDF file")
+    parser.add_argument("-n", "--name", type=str, help="Short name of the ACTRIS station in question")
     parser.add_argument("-d", "--dir", type=str, help="Path to the directory where to store the output SOFT-IO file")
     parser.add_argument("-o", "--output", type=str, help="Path to the SOFT-IO merged database file where to add new data")
     args = parser.parse_args()
 
     logger.info("Calling SOFT-io")
-    softio_file = apply_softio(args.file, args.dir)
-    logger.info("Adding to the database")
-    status_code = add_to_database(softio_file, args.output)
+    softio_file = apply_softio(args.file, args.dir, args.name)
+    if args.output is not None:
+        logger.info("Adding to the database")
+        status_code = add_to_database(softio_file, args.output)
