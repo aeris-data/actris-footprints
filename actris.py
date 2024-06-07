@@ -14,24 +14,48 @@ import numpy.ma as ma
 FLEXPART_ROOT   = "/usr/local/flexpart_v10.4_3d7eebf"
 FLEXPART_EXE    = "/usr/local/flexpart_v10.4_3d7eebf/src/FLEXPART"
 
-STATIONS_CODE = {"PicDuMidi":"PDM",
-                 "PuyDeDome":"PUY",
-                 "SIRTA":"SAC",
-                 "ObservatoirePerenne":"OPE",
-                 "Maido":"RUN",
-                 "Lamto":"LTO"}
-
-def write_header_in_file(filepath: str) -> None:
-    with open(filepath,"w") as file:
-        file.write("╔═══════════════════════════════════════════════╗\n")
-        file.write("║                 |    *                        ║\n")
-        file.write("║                 |  *                          ║\n")
-        file.write("║                 | *                           ║\n")
-        file.write("║             ,,gg|dY\"\"\"\"Ybbgg,,                ║\n")
-        file.write("║        ,agd\"\"'  |           `\"\"bg,            ║\n")
-        file.write("║     ,gdP\"     A C T R I S       \"Ybg,         ║\n")
-        file.write("║                     FRANCE                    ║\n")
-        file.write("╚═══════════════════════════════════════════════╝\n")
+DEFAULT_PARAMS = {"pi":3.14159265,
+                  "r_earth":6.371e6,
+                  "r_air":287.05,
+                  "nxmaxn":0,
+                  "nymaxn":0,
+                  "nxmax":361,
+                  "nymax":181,
+                  "nuvzmax":138,
+                  "nwzmax":138,
+                  "nzmax":138,
+                  "maxwf":50000,
+                  "maxtable":1000,
+                  "numclass":13,
+                  "ni":11,
+                  "maxcolumn":3000,
+                  "maxrand":1000000,
+                  "maxpart":100000,
+                  "forward":1,
+                  "output":3600,
+                  "averageOutput":3600,
+                  "sampleRate":900,
+                  "particleSplitting":999999999,
+                  "synchronisation":900,
+                  "ctl":-5,
+                  "ifine":4,
+                  "iOut":9,
+                  "ipOut":0,
+                  "lSubGrid":1,
+                  "lConvection":1,
+                  "lAgeSpectra":0,
+                  "ipIn":0,
+                  "iOfr":0,
+                  "iFlux":0,
+                  "mDomainFill":0,
+                  "indSource":1,
+                  "indReceptor":1,
+                  "mQuasilag":0,
+                  "nestedOutput":0,
+                  "lInitCond":0,
+                  "surfOnly":0,
+                  "cblFlag":0,
+                  "ageclass":172800}
 
 def print_header_in_terminal() -> None:
     LOGGER.info("╔═══════════════════════════════════════════════╗")
@@ -44,11 +68,9 @@ def print_header_in_terminal() -> None:
     LOGGER.info("║                     FRANCE                    ║")
     LOGGER.info("╚═══════════════════════════════════════════════╝")
 
-def start_log(shell_option: bool=True, log_filepath: str="") -> logging.Logger:
+def start_log(log_filepath: str="") -> logging.Logger:
     log_handlers = []
-    if shell_option==True:
-        log_handlers.append(logging.StreamHandler())
-    log_handlers.append(logging.FileHandler(log_filepath))
+    log_handlers.append(logging.StreamHandler())
     logging.basicConfig(format="%(asctime)s   [%(levelname)s]   %(message)s",
                         datefmt="%d/%m/%Y %H:%M:%S",
                         handlers=log_handlers)
@@ -66,23 +88,25 @@ def get_simulation_date(xml_file: str) -> dict:
     xml  = ET.parse(xml_file)
     # ________________________________________________________
     # Check if all nodes are present
-    xml_nodes = ["actris/simulation_date",
-                 "actris/simulation_date/begin",
-                 "actris/simulation_date/end",
-                 "actris/simulation_date/dtime"]
+    xml_nodes = ["actris/simulation_start",
+                 "actris/simulation_start/date",
+                 "actris/simulation_end",
+                 "actris/simulation_end/date",
+                 "actris/ecmwf_time",
+                 "actris/ecmwf_time/dtime"]
     for node in xml_nodes:
         try:
             found_node = xml.getroot().find(node)
         except:
-            LOGGER.error("<simulation_date> node is missing or its children nodes are in incorrect format, check your configuration file!")
+            LOGGER.error("<simulation_start[end]> date node is missing or its children nodes are in incorrect format, check your configuration file!")
             sys.exit(1)
     # ________________________________________________________
     # Get date from the xml
     xml  = xml.getroot().find("actris").find("simulation_date")
     date = {}
-    date["begin"] = xml.find("begin").text
-    date["end"]   = xml.find("end").text
-    date["dtime"] = int(xml.find("dtime").text)
+    date["begin"] = xml.find("simulation_start").find("date").text
+    date["end"]   = xml.find("simulation_end").find("date").text
+    date["dtime"] = int(xml.find("ecmwf_time").find("dtime").text)
     # ________________________________________________________
     # Check if strings are correct
     try:
@@ -108,21 +132,22 @@ def get_simulation_time(xml_file: str) -> dict:
     xml  = ET.parse(xml_file)
     # ________________________________________________________
     # Check if all nodes are present
-    xml_nodes = ["actris/simulation_time",
-                 "actris/simulation_time/begin",
-                 "actris/simulation_time/end"]
+    xml_nodes = ["girafe/simulation_start",
+                 "girafe/simulation_start/time",
+                 "girafe/simulation_end",
+                 "girafe/simulation_end/time"]
     for node in xml_nodes:
         try:
             found_node = xml.getroot().find(node)
         except:
-            LOGGER.error("<simulation_time> node is missing or its children nodes are in incorrect format, check your configuration file!")
+            LOGGER.error("<simulation_start[end]> time node is missing or its children nodes are in incorrect format, check your configuration file!")
             sys.exit(1)
     # ________________________________________________________
     # Get time from the xml file
     xml  = xml.getroot().find("actris").find("simulation_time")
     time = {}
-    time["begin"] = xml.find("begin").text
-    time["end"]   = xml.find("end").text
+    time["begin"] = xml.find("simulation_start").find("time").text
+    time["end"]   = xml.find("simulation_end").find("time").text
     # ________________________________________________________
     # Check if strings are correct
     try:
@@ -182,10 +207,10 @@ def write_command_file(config_xml_filepath: str, working_dir: str) -> None:
     xml  = ET.parse(config_xml_filepath)
     xml  = xml.getroot().find("actris")
     xml_keys = ["flexpart/command/forward",
-                "simulation_date/begin",
-                "simulation_time/begin",
-                "simulation_date/end",
-                "simulation_time/end",
+                "simulation_start/date",
+                "simulation_start/time",
+                "simulation_end/date",
+                "simulation_end/time",
                 "flexpart/command/time/output",
                 "flexpart/command/time/averageOutput",
                 "flexpart/command/time/sampleRate",
@@ -212,9 +237,6 @@ def write_command_file(config_xml_filepath: str, working_dir: str) -> None:
     flexpart_keys = ["LDIRECT","IBDATE","IBTIME","IEDATE","IETIME","LOUTSTEP","LOUTAVER","LOUTSAMPLE","ITSPLIT","LSYNCTIME","CTL",
                      "IFINE","IOUT","IPOUT","LSUBGRID","LCONVECTION","LAGESPECTRA","IPIN","IOUTPUTFOREACHRELEASE","IFLUX","MDOMAINFILL",
                      "IND_SOURCE","IND_RECEPTOR","MQUASILAG","NESTED_OUTPUT","LINIT_COND","SURF_ONLY","CBLFLAG"]
-    # ----------------------------------------------------
-    # MANUAL VERSION
-    # ----------------------------------------------------
     with open(working_dir+"/options/COMMAND","w") as file:
         file.write("***************************************************************************************************************\n")
         file.write("*                                                                                                             *\n")
@@ -227,7 +249,10 @@ def write_command_file(config_xml_filepath: str, working_dir: str) -> None:
             try:
                 value = xml.find(xml_keys[ii]).text
             except:
-                LOGGER.error(f"<{xml_keys[ii]}> node is missing, check your configuration file!")
+                try:
+                    value = str(DEFAULT_PARAMS[os.path.basename(xml_keys[ii])])
+                except:
+                    LOGGER.error(f"<{xml_keys[ii]}> node is mandatory but missing, check your configuration file!")
             file.write(" "+
                        flexpart_keys[ii]+"="+
                        " "*(24-len(flexpart_keys[ii])-1-len(value))+
@@ -307,12 +332,21 @@ def write_receptors_file(config_xml_filepath: str, working_dir: str) -> None:
     LOGGER.info("Preparing RECEPTORS file for FLEXPART")
     xml  = ET.parse(config_xml_filepath)
     xml  = xml.getroot().find("actris/flexpart/receptor")
-    with open(working_dir+"/options/RECEPTORS","w") as file:
-        for node in xml:
-            file.write("&RECEPTORS\n")
-            file.write(" RECEPTOR=\""+node.attrib["name"]+"\",\n")
-            file.write(" LON="+node.attrib["longitude"]+",\n")
-            file.write(" LAT="+node.attrib["latitude"]+",\n")
+    if xml != None:
+        with open(working_dir+"/options/RECEPTORS","w") as file:
+            for node in xml:
+                file.write("&RECEPTORS\n")
+                file.write(" RECEPTOR=\""+node.attrib["name"]+"\",\n")
+                file.write(" LON="+node.attrib["longitude"]+",\n")
+                file.write(" LAT="+node.attrib["latitude"]+",\n")
+                file.write(" /\n")
+    else:
+        LOGGER.info("No receptors were requested")
+        with open(working_dir+"/options/RECEPTORS","w") as file:
+            file.write("&RECEPTORS")
+            file.write(f" RECEPTOR=\"receptor 1\"\n")
+            file.write(f" LON=0.0,\n")
+            file.write(f" LAT=0.0,\n")
             file.write(" /\n")
 
 def write_par_mod_file(config_xml_filepath: str, working_dir: str, max_number_parts: int) -> str:
@@ -400,36 +434,62 @@ def write_par_mod_file(config_xml_filepath: str, working_dir: str, max_number_pa
 
 def write_ageclasses_file(config_xml_filepath: str, working_dir: str):
     xml             = ET.parse(config_xml_filepath)
-    ageclasses_flag = int(xml.getroot().find("actris/flexpart/command/lAgeSpectra").text)
+    try:
+        ageclasses_flag = int(xml.getroot().find("actris/flexpart/command/lAgeSpectra").text)
+    except:
+        ageclasses_flag = DEFAULT_PARAMS["lAgeSpectra"]
     if ageclasses_flag==0:
-        return
-    elif ageclasses_flag==1:
-        file = open(f"{working_dir}/options/AGECLASSES", "w")
-        file.write("************************************************\n")
-        file.write("*                                              *\n")
-        file.write("*Lagrangian particle dispersion model FLEXPART *\n")
-        file.write("*         Please select your options           *\n")
-        file.write("*                                              *\n")
-        file.write("*This file determines the ageclasses to be used*\n")
-        file.write("*                                              *\n")
-        file.write("*Ages are given in seconds. The first class    *\n")
-        file.write("*starts at age zero and goes up to the first   *\n")
-        file.write("*age specified. The last age gives the maximum *\n")
-        file.write("*time a particle is carried in the simulation. *\n")
-        file.write("*                                              *\n")
-        file.write("************************************************\n")
-        ages = []
-        for node in xml.getroot().findall("actris/flexpart/ageclass/class"):
-            ages.append(int(node.text))
-        ages.sort()
-        for age in ages:
+        LOGGER.info("Taking default ageclass value")
+        with open(working_dir+"/options/AGECLASS","w") as file:
             file.write("&AGECLASS\n")
-            file.write("NAGECLASS= 1,\n")
-            file.write(f"LAGE= {age},\n")
-            file.write("/\n")
-        file.close()
+            file.write(" NAGECLASS=1\n")
+            file.write(f" LAGE={DEFAULT_PARAMS['ageclass']}\n")
+            file.write(" /\n")
+    elif ageclasses_flag==1:
+        xml  = xml.getroot().find("girafe/flexpart/ageclass")
+        if xml != None:
+            with open(f"{working_dir}/options/AGECLASSES", "w") as file:
+                file.write("************************************************\n")
+                file.write("*                                              *\n")
+                file.write("*Lagrangian particle dispersion model FLEXPART *\n")
+                file.write("*         Please select your options           *\n")
+                file.write("*                                              *\n")
+                file.write("*This file determines the ageclasses to be used*\n")
+                file.write("*                                              *\n")
+                file.write("*Ages are given in seconds. The first class    *\n")
+                file.write("*starts at age zero and goes up to the first   *\n")
+                file.write("*age specified. The last age gives the maximum *\n")
+                file.write("*time a particle is carried in the simulation. *\n")
+                file.write("*                                              *\n")
+                file.write("************************************************\n")
+                ages = []
+                for node in xml.getroot().findall("actris/flexpart/ageclass/class"):
+                    ages.append(int(node.text))
+                ages.sort()
+                for age in ages:
+                    file.write("&AGECLASS\n")
+                    file.write("NAGECLASS= 1,\n")
+                    file.write(f"LAGE= {age},\n")
+                    file.write("/\n")
+        else:
+            LOGGER.info("The lAgeSpectra is 1 in the <command> node but the <ageclass> node is missing, taking default ageclass value")
+            with open(working_dir+"/options/AGECLASS","w") as file:
+                file.write("&AGECLASS\n")
+                file.write(" NAGECLASS=1\n")
+                file.write(f" LAGE={DEFAULT_PARAMS['ageclass']}\n")
+                file.write(" /\n")
     else:
-        return
+        LOGGER.error("lAgeSpectra must be either 0 or 1 if it is set in the XML file, check your configuration file and try again.")
+        sys.exit(1)
+
+def add_time(init_datetime: str, init_format: str, add_string: str, new_format: str):
+    init_datetime_obj = datetime.datetime.strptime(init_datetime, init_format)
+    new_datetime_obj  = init_datetime_obj + datetime.timedelta(days=int(add_string[:2]),
+                                                               hours=int(add_string[2:4]),
+                                                               minutes=int(add_string[4:6]),
+                                                               seconds=int(add_string[6:8]))
+    return datetime.datetime.strftime(new_datetime_obj, new_format)
+
 
 def write_releases_file(config_xml_filepath: str, working_dir: str) -> int:
     xml = ET.parse(config_xml_filepath)
@@ -456,16 +516,16 @@ def write_releases_file(config_xml_filepath: str, working_dir: str) -> int:
     total_number_parts  = 0
     for release in release_node:
         if release.tag=="release":
-            end_date = datetime.datetime.strptime(release.find('start_date').text+'T'+release.find('start_time').text, '%Y%m%dT%H%M%S') + \
-                        datetime.timedelta(days=int(release.find('end_time').text[:2]),
-                                           hours=int(release.find('end_time').text[2:4]),
-                                           minutes=int(release.find('end_time').text[4:6]),
-                                           seconds=float(release.find('end_time').text[6:]))
+            release_start_date     = release.find("start_date").text
+            release_start_time     = release.find("start_time").text
+            release_duration       = release.find("duration").text
+            end_date   = add_time(f"{release_start_date} {release_start_time}", "%Y%m%d %H%M%S", release_duration, "%Y%m%d")
+            end_time   = add_time(f"{release_start_date} {release_start_time}", "%Y%m%d %H%M%S", release_duration, "%H%M%S")
             file.write("&RELEASE\n")
-            file.write(f" IDATE1 = {release.find('start_date').text},\n")
-            file.write(f" ITIME1 = {release.find('start_time').text},\n")
-            file.write(f" IDATE2 = {datetime.datetime.strftime(end_date, '%Y%m%d')},\n")
-            file.write(f" ITIME2 = {datetime.datetime.strftime(end_date, '%H%M%S')},\n")
+            file.write(f" IDATE1 = {release_start_date},\n")
+            file.write(f" ITIME1 = {release_start_time},\n")
+            file.write(f" IDATE2 = {end_date},\n")
+            file.write(f" ITIME2 = {end_time},\n")
             file.write(f" LON1 = {release.find('zones/zone/lonmin').text},\n")
             file.write(f" LON2 = {release.find('zones/zone/lonmax').text},\n")
             file.write(f" LAT1 = {release.find('zones/zone/latmin').text},\n")
@@ -575,13 +635,9 @@ if __name__=="__main__":
 
     import argparse
     
-    parser = argparse.ArgumentParser(description="Python code that prepare all FLEXPART inputs"
-                                    "and launch FLEXPART simulations based on your configuration.xml and "
-                                    "parameters.xml files where you configure your simulation time, input data etc", 
+    parser = argparse.ArgumentParser(description="Python code that prepares all FLEXPART inputs and launches a backward FLEXPART simulation for an ACTRIS station based on the user’s configuration file.", 
                                     formatter_class=argparse.RawTextHelpFormatter)
-    parser.add_argument("--config", type=str, default="./actris-config.xml",
-                        help="Filepath to your configuration xml file.")
-    parser.add_argument("--shell-log",help="Display log also in the shell",action="store_true")
+    parser.add_argument("--config", type=str, help="Filepath to your configuration xml file.")
 
     args = parser.parse_args()
 
@@ -591,11 +647,7 @@ if __name__=="__main__":
 
     global LOGGER, LOG_FILEPATH
     LOG_FILEPATH = wdir+"/actris_"+datetime.datetime.now().strftime("%Y%m%d_%H%M%S")+".log"
-    LOGGER = start_log(args.shell_log, LOG_FILEPATH)
-    if args.shell_log==True:
-        print_header_in_terminal()
-    else:
-        write_header_in_file(LOG_FILEPATH)
+    LOGGER = start_log(LOG_FILEPATH)
 
     if status!=0:
         LOGGER.error("Something went wrong...")
