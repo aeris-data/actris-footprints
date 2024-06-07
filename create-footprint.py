@@ -15,13 +15,6 @@ PIXEL_AREA_URL = "/usr/local/FLEXPART/pixel_areas_005deg.nc"
 IDX_CHUNK = 160
 IDX_CHUNK_FOR_COORDS = IDX_CHUNK * 40
 
-STATIONS_CODE = {"PicDuMidi":"PDM",
-                 "PuyDeDome":"PUY",
-                 "SIRTA":"SAC",
-                 "ObservatoirePerenne":"OPE",
-                 "Maido":"RUN",
-                 "Lamto":"LTO"}
-
 def get_air_vertical_profile():
     vertical_profile_of_air_density = pd.read_csv(AIR_DENSITY_URL, index_col='height_in_m', dtype=np.float32)['density_in_kg_per_m3']
     vertical_profile_of_air_density = xr.DataArray.from_series(vertical_profile_of_air_density).rename({'height_in_m': 'height'})
@@ -258,7 +251,7 @@ def get_footprint_data(flexpart_output: str) -> xr.Dataset :
     with open_dataset(flexpart_output) as _ds:
         da = _ds['spec001_mr']
         t = _ds['release_time'][0].dt.round("h").values.astype('M8[ns]')
-        station_code = STATIONS_CODE[os.path.basename(flexpart_output).split("-")[0]]
+        station_code = station_short_name
         res_time = da.sum('height').squeeze('nageclass').mean('pointspec')
         res_time_norm = res_time
         res_time_per_km2 = res_time_norm.sum('time') / res_time_norm['area'] * 1e6
@@ -272,7 +265,7 @@ def get_footprint_data(flexpart_output: str) -> xr.Dataset :
         output = output.expand_dims(['time', 'station_id', 'height']).set_coords(['time', 'station_id', 'height'])
     return output
 
-def create_footprints(flexpart_output: str, output_file_with_footprints: str) -> None:
+def create_footprints(flexpart_output: str, output_file_with_footprints: str, station_short_name: str) -> None:
     """
     This function merges the new footprint with the bigger footprints database of
     other simulations
@@ -282,7 +275,7 @@ def create_footprints(flexpart_output: str, output_file_with_footprints: str) ->
         output_file_with_footprints (str): path to the zarr merged database with footprints
     """
     logger.info(f"Creating footprint from file {flexpart_output}")
-    ds = get_footprint_data(flexpart_output)
+    ds = get_footprint_data(flexpart_output, station_short_name)
     if os.path.exists(output_file_with_footprints):
         with xr.open_zarr(output_file_with_footprints) as zarr_ds:
             output = xr.merge([zarr_ds, ds])
@@ -303,6 +296,7 @@ if __name__ == '__main__':
 
     Args:
         -f / --file   : path to the FLEXPART output netCDF file
+        -n / --name   : short name of the ACTRIS station (same as in the JSON configuration file)
         -o / --output : path to the zarr merged database with footprints
     """
 
@@ -311,8 +305,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Computing footprint integrated image from the FLEXPART output",
                                      formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument("-f", "--file", type=str, help="Path to the FLEXPART output netCDF file")
+    parser.add_argument("-n", "--name", type=str, help="Short name of the ACTRIS station in question")
     parser.add_argument("-o", "--output", type=str, help="Path to the zarr merged database with footprints")
     args = parser.parse_args()
 
     logger.info(f"Processing {args.file}")
-    create_footprints(args.file, args.output)
+    create_footprints(args.file, args.output, args.name)
