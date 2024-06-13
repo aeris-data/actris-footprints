@@ -31,7 +31,7 @@ DEFAULT_PARAMS = {"pi":3.14159265,
                   "maxcolumn":3000,
                   "maxrand":1000000,
                   "maxpart":100000,
-                  "forward":1,
+                  "forward":-1,
                   "output":3600,
                   "averageOutput":3600,
                   "sampleRate":900,
@@ -49,7 +49,7 @@ DEFAULT_PARAMS = {"pi":3.14159265,
                   "iFlux":0,
                   "mDomainFill":0,
                   "indSource":1,
-                  "indReceptor":1,
+                  "indReceptor":2,
                   "mQuasilag":0,
                   "nestedOutput":0,
                   "lInitCond":0,
@@ -102,7 +102,7 @@ def get_simulation_date(xml_file: str) -> dict:
             sys.exit(1)
     # ________________________________________________________
     # Get date from the xml
-    xml  = xml.getroot().find("actris").find("simulation_date")
+    xml  = xml.getroot().find("actris")
     date = {}
     date["begin"] = xml.find("simulation_start").find("date").text
     date["end"]   = xml.find("simulation_end").find("date").text
@@ -144,7 +144,7 @@ def get_simulation_time(xml_file: str) -> dict:
             sys.exit(1)
     # ________________________________________________________
     # Get time from the xml file
-    xml  = xml.getroot().find("actris").find("simulation_time")
+    xml  = xml.getroot().find("actris")
     time = {}
     time["begin"] = xml.find("simulation_start").find("time").text
     time["end"]   = xml.find("simulation_end").find("time").text
@@ -237,6 +237,9 @@ def write_command_file(config_xml_filepath: str, working_dir: str) -> None:
     flexpart_keys = ["LDIRECT","IBDATE","IBTIME","IEDATE","IETIME","LOUTSTEP","LOUTAVER","LOUTSAMPLE","ITSPLIT","LSYNCTIME","CTL",
                      "IFINE","IOUT","IPOUT","LSUBGRID","LCONVECTION","LAGESPECTRA","IPIN","IOUTPUTFOREACHRELEASE","IFLUX","MDOMAINFILL",
                      "IND_SOURCE","IND_RECEPTOR","MQUASILAG","NESTED_OUTPUT","LINIT_COND","SURF_ONLY","CBLFLAG"]
+    backward_flag = int(xml.find(xml_keys[0]).text)
+    if backward_flag == -1:
+        DEFAULT_PARAMS["iOfr"] = 1
     with open(working_dir+"/options/COMMAND","w") as file:
         file.write("***************************************************************************************************************\n")
         file.write("*                                                                                                             *\n")
@@ -578,7 +581,7 @@ def check_ECMWF_pool(config_xml_filepath: str, working_dir: str) -> int:
     return exit_flag
 
 def get_working_dir(config_xml_filepath: str) -> str:
-    xml          = ET.parse(config_xml_filepath)
+    xml = ET.parse(config_xml_filepath)
     return xml.getroot().find("actris/paths/working_dir").text
 
 def copy_source_files(working_dir: str) -> None:
@@ -686,6 +689,9 @@ if __name__=="__main__":
     
     LOGGER.info("Launching FLEXPART")
 
-    run_bash_command("./FLEXPART", wdir)
+    status = run_bash_command("./FLEXPART", wdir)
+    if status==1:
+        LOGGER.error("Something went wrong...")
+        sys.exit(1)
 
     # output_netcdf = glob.glob(f"{wdir}/output/*.nc")[0]
