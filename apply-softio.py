@@ -121,7 +121,11 @@ if __name__=="__main__":
     args = parser.parse_args()
 
     logger.info("Calling SOFT-io")
-    softio_file = apply_softio(args.file, args.dir, args.name)
-    if args.output is not None:
-        logger.info("Adding to the database")
-        status_code = add_to_database(softio_file, args.output)
+    if os.path.exists(args.file):
+        softio_file = apply_softio(args.file, args.dir, args.name)
+        if args.output is not None:
+            logger.info("Adding to the database")
+            status_code = add_to_database(softio_file, args.output)
+    else:
+        logger.error("Input FLEXPART file does not exist")
+        sys.exit(1)
