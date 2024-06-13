@@ -112,7 +112,6 @@ function main(){
             --job-name="flexpart-${station}-${date}" \
             --output="${log_filepath}" \
             --error="${log_filepath}" \
-            --open-mode=append \
             --wrap="${SRC_DIR}/actris-processing.sh -n ${station} -d ${date} -c ${PATHS_CONF_FILEPATH} --flexpart")
         id="${id//[!0-9]/}"
         if [ -z ${jobIDs} ]; then
@@ -178,6 +177,7 @@ function main(){
                 echo "{'processing_date':'$(date +'%d/%m/%Y %H:%M:%S %Z')', 'station_id':'${station_name}', 'simulation_date':'${date}', 'log_filepath':'${log_filepath}', 'processing_step':'footprints', 'status':1}" >> ${LOG_CATALOGUE_FILEPATH}
             fi
         elif [[ "${job_state}" == "FAILED" ]]; then
+            warning "FLEXPART simulation has failed, no SOFT-IO nor footprints processing were launched. Check ${log_filepath} for more information"
             echo "{'processing_date':'$(date +'%d/%m/%Y %H:%M:%S %Z')', 'station_id':'${station_name}', 'simulation_date':'${date}', 'log_filepath':'${log_filepath}', 'processing_step':'flexpart', 'status':1}" >> ${LOG_CATALOGUE_FILEPATH}
             echo "{'processing_date':'$(date +'%d/%m/%Y %H:%M:%S %Z')', 'station_id':'${station_name}', 'simulation_date':'${date}', 'log_filepath':'${log_filepath}', 'processing_step':'softio', 'status':1}" >> ${LOG_CATALOGUE_FILEPATH}
             echo "{'processing_date':'$(date +'%d/%m/%Y %H:%M:%S %Z')', 'station_id':'${station_name}', 'simulation_date':'${date}', 'log_filepath':'${log_filepath}', 'processing_step':'footprints', 'status':1}" >> ${LOG_CATALOGUE_FILEPATH}
