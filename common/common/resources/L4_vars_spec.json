@@ -1,0 +1,523 @@
+{
+  "UTC_time": {
+    "standard_name": "time",
+    "long_name": "UTC time"
+  },
+  "lon": {
+    "standard_name": "longitude",
+    "long_name": "Longitude",
+    "units": "degree_east"
+  },
+  "lat": {
+    "standard_name": "latitude",
+    "long_name": "Latitude",
+    "units": "degree_north"
+  },
+  "air_press_AC": {
+    "standard_name": "air_pressure",
+    "long_name": "Air pressure",
+    "units": "Pa"
+  },
+  "PV": {
+    "standard_name": "ertel_potential_vorticity",
+    "long_name": "Potential vorticity",
+    "units": "1e-6 K m2 kg-1 s-1",
+    "comment": "Calculated with FLEXPART v9; the unit is 1 PVU = 1e-6 K m2 kg-1 s-1; available only on altitudes with air pressure below 90% of surface pressure"
+  },
+  "press_PV": {
+    "standard_name": "air_pressure_defined_by_potential_vorticity",
+    "long_name": "Air pressure at the highest location with a given value of potential vorticity",
+    "units": "Pa",
+    "comment": "Calculated with FLEXPART v9"
+  },
+  "press_PV1_5": {
+    "standard_name": "air_pressure_defined_by_potential_vorticity",
+    "long_name": "Air pressure at the highest location with value of potential vorticity 1.5 PVU",
+    "units": "Pa",
+    "comment": "Calculated with FLEXPART v9"
+  },
+  "press_PV2_0": {
+    "standard_name": "air_pressure_defined_by_potential_vorticity",
+    "long_name": "Air pressure at the highest location with value of potential vorticity 2.0 PVU",
+    "units": "Pa",
+    "comment": "Calculated with FLEXPART v9"
+  },
+  "press_PV3_0": {
+    "standard_name": "air_pressure_defined_by_potential_vorticity",
+    "long_name": "Air pressure at the highest location with value of potential vorticity 3.0 PVU",
+    "units": "Pa",
+    "comment": "Calculated with FLEXPART v9"
+  },
+  "press_PV4_0": {
+    "standard_name": "air_pressure_defined_by_potential_vorticity",
+    "long_name": "Air pressure at the highest location with value of potential vorticity 4.0 PVU",
+    "units": "Pa",
+    "comment": "Calculated with FLEXPART v9"
+  },
+  "press_PV6_0": {
+    "standard_name": "air_pressure_defined_by_potential_vorticity",
+    "long_name": "Air pressure at the highest location with value of potential vorticity 6.0 PVU",
+    "units": "Pa",
+    "comment": "Calculated with FLEXPART v9"
+  },
+  "press_PV8_0": {
+    "standard_name": "air_pressure_defined_by_potential_vorticity",
+    "long_name": "Air pressure at the highest location with value of potential vorticity 8.0 PVU",
+    "units": "Pa",
+    "comment": "Calculated with FLEXPART v9"
+  },
+  "blh": {
+    "standard_name": "atmosphere_boundary_layer_thickness",
+    "long_name": "Boundary layer height",
+    "units": "m"
+  },
+  "geo_region": {
+    "standard_name": "region",
+    "long_name": "Geographic region",
+    "comment": "here put a reference which explains the regions' codes/labels, shows the regions on the map, etc."
+  },
+  "emission_inventory": {
+    "standard_name": "emission_inventory"
+  },
+  "CO_contrib": {
+    "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+    "long_name": "CO contribution mixing ratio",
+    "units": "1e-9"
+  },
+  "CO_GFAS": {
+    "standard_name": "mole_fraction_of_carbon_monoxide_in_air_originating_from_region",
+    "long_name": "Carbon monoxide mixing ratio in air originating from a region modelled using GFAS version 1.2 PRM with injection profile (hmean) biomass burning emissions",
+    "units": "1e-9"
+  },
+  "CO_GFAS_1_0_prm": {
+    "standard_name": "mole_fraction_of_carbon_monoxide_in_air_originating_from_region",
+    "long_name": "Carbon monoxide mixing ratio in air originating from a region modelled using GFAS version 1.0 PRM with injection profile (prm) biomass burning emissions",
+    "units": "1e-9"
+  },
+  "CO_GFED": {
+    "standard_name": "mole_fraction_of_carbon_monoxide_in_air_originating_from_region_and_emission_inventory",
+    "long_name": "Carbon monoxide mixing ratio in air originating from a region modelled using GFED4 using MIXED injection profile (prm) biomass burning emissions",
+    "units": "1e-9"
+  },
+  "CO_MACC": {
+    "standard_name": "mole_fraction_of_carbon_monoxide_in_air_originating_from_region_and_emission_inventory",
+    "long_name": "Carbon monoxide mixing ratio in air originating from a region modelled using MACCITY anthropogenic (0-1000m) emissions",
+    "units": "1e-9"
+  },
+  "strat_frac": {
+    "standard_name": "stratospheric_air_mass_fraction",
+    "long_name": "Fraction of stratospheric air mass",
+    "units": "1"
+  },
+  "CO_GFAS_AUST": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Australia and Oceania with GFAS version 1.2 biomass burning emissions (injection heights are based on altitude plume top provided in GFAS v1.2 at 0.1 deg; cf. Remy et al., 2017)",
+      "units": "1e-9"
+  },
+  "CO_GFAS_BOAS": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Boreal Asia with GFAS version 1.2 biomass burning emissions (injection heights are based on altitude plume top provided in GFAS v1.2 at 0.1 deg; cf. Remy et al., 2017)",
+      "units": "1e-9"
+  },
+  "CO_GFAS_BONA": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Boreal North America with GFAS version 1.2 biomass burning emissions (injection heights are based on altitude plume top provided in GFAS v1.2 at 0.1 deg; cf. Remy et al., 2017)",
+      "units": "1e-9"
+  },
+  "CO_GFAS_CEAM": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Central America and Mexico with GFAS version 1.2 biomass burning emissions (injection heights are based on altitude plume top provided in GFAS v1.2 at 0.1 deg; cf. Remy et al., 2017)",
+      "units": "1e-9"
+  },
+  "CO_GFAS_CEAS": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Central Asia with GFAS version 1.2 biomass burning emissions (injection heights are based on altitude plume top provided in GFAS v1.2 at 0.1 deg; cf. Remy et al., 2017)",
+      "units": "1e-9"
+  },
+  "CO_GFAS_EQAS": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Equatorial Asia with GFAS version 1.2 biomass burning emissions (injection heights are based on altitude plume top provided in GFAS v1.2 at 0.1 deg; cf. Remy et al., 2017)",
+      "units": "1e-9"
+  },
+  "CO_GFAS_EURO": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Europe with GFAS version 1.2 biomass burning emissions (injection heights are based on altitude plume top provided in GFAS v1.2 at 0.1 deg; cf. Remy et al., 2017)",
+      "units": "1e-9"
+  },
+  "CO_GFAS_MIDE": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Middle East with GFAS version 1.2 biomass burning emissions (injection heights are based on altitude plume top provided in GFAS v1.2 at 0.1 deg; cf. Remy et al., 2017)",
+      "units": "1e-9"
+  },
+  "CO_GFAS_NHAF": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Northern Hemisphere Africa with GFAS version 1.2 biomass burning emissions (injection heights are based on altitude plume top provided in GFAS v1.2 at 0.1 deg; cf. Remy et al., 2017)",
+      "units": "1e-9"
+  },
+  "CO_GFAS_NHSA": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Northern Hemisphere South America with GFAS version 1.2 biomass burning emissions (injection heights are based on altitude plume top provided in GFAS v1.2 at 0.1 deg; cf. Remy et al., 2017)",
+      "units": "1e-9"
+  },
+  "CO_GFAS_SEAS": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Southeast Asia with GFAS version 1.2 biomass burning emissions (injection heights are based on altitude plume top provided in GFAS v1.2 at 0.1 deg; cf. Remy et al., 2017)",
+      "units": "1e-9"
+  },
+  "CO_GFAS_SHAF": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Southern Hemisphere Africa with GFAS version 1.2 biomass burning emissions (injection heights are based on altitude plume top provided in GFAS v1.2 at 0.1 deg; cf. Remy et al., 2017)",
+      "units": "1e-9"
+  },
+  "CO_GFAS_SHSA": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Southern Hemisphere South America with GFAS version 1.2 biomass burning emissions (injection heights are based on altitude plume top provided in GFAS v1.2 at 0.1 deg; cf. Remy et al., 2017)",
+      "units": "1e-9"
+  },
+  "CO_GFAS_TENA": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Temperate North America with GFAS version 1.2 biomass burning emissions (injection heights are based on altitude plume top provided in GFAS v1.2 at 0.1 deg; cf. Remy et al., 2017)",
+      "units": "1e-9"
+  },
+  "CO_GFAS_TOTAL": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide mixing ratio from GFAS version 1.2 biomass burning emissions (injection heights are based on altitude plume top provided in GFAS v1.2 at 0.1 deg; cf. Remy et al., 2017)",
+      "units": "1e-9"
+  },
+  "CO_GFAS_1_0_prm_AUST": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Australia and Oceania with GFAS version 1.0 biomass burning emissions (injection heights are based on MIXED methodology; cf. Sauvage et al., 2017)",
+      "units": "1e-9"
+  },
+  "CO_GFAS_1_0_prm_BOAS": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Boreal Asia with GFAS version 1.0 biomass burning emissions (injection heights are based on MIXED methodology; cf. Sauvage et al., 2017)",
+      "units": "1e-9"
+  },
+  "CO_GFAS_1_0_prm_BONA": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Boreal North America with GFAS version 1.0 biomass burning emissions (injection heights are based on MIXED methodology; cf. Sauvage et al., 2017)",
+      "units": "1e-9"
+  },
+  "CO_GFAS_1_0_prm_CEAM": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Central America and Mexico with GFAS version 1.0 biomass burning emissions (injection heights are based on MIXED methodology; cf. Sauvage et al., 2017)",
+      "units": "1e-9"
+  },
+  "CO_GFAS_1_0_prm_CEAS": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Central Asia with GFAS version 1.0 biomass burning emissions (injection heights are based on MIXED methodology; cf. Sauvage et al., 2017)",
+      "units": "1e-9"
+  },
+  "CO_GFAS_1_0_prm_EQAS": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Equatorial Asia with GFAS version 1.0 biomass burning emissions (injection heights are based on MIXED methodology; cf. Sauvage et al., 2017)",
+      "units": "1e-9"
+  },
+  "CO_GFAS_1_0_prm_EURO": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Europe with GFAS version 1.0 biomass burning emissions (injection heights are based on MIXED methodology; cf. Sauvage et al., 2017)",
+      "units": "1e-9"
+  },
+  "CO_GFAS_1_0_prm_MIDE": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Middle East with GFAS version 1.0 biomass burning emissions (injection heights are based on MIXED methodology; cf. Sauvage et al., 2017)",
+      "units": "1e-9"
+  },
+  "CO_GFAS_1_0_prm_NHAF": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Northern Hemisphere Africa with GFAS version 1.0 biomass burning emissions (injection heights are based on MIXED methodology; cf. Sauvage et al., 2017)",
+      "units": "1e-9"
+  },
+  "CO_GFAS_1_0_prm_NHSA": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Northern Hemisphere South America with GFAS version 1.0 biomass burning emissions (injection heights are based on MIXED methodology; cf. Sauvage et al., 2017)",
+      "units": "1e-9"
+  },
+  "CO_GFAS_1_0_prm_SEAS": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Southeast Asia with GFAS version 1.0 biomass burning emissions (injection heights are based on MIXED methodology; cf. Sauvage et al., 2017)",
+      "units": "1e-9"
+  },
+  "CO_GFAS_1_0_prm_SHAF": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Southern Hemisphere Africa with GFAS version 1.0 biomass burning emissions (injection heights are based on MIXED methodology; cf. Sauvage et al., 2017)",
+      "units": "1e-9"
+  },
+  "CO_GFAS_1_0_prm_SHSA": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Southern Hemisphere South America with GFAS version 1.0 biomass burning emissions (injection heights are based on MIXED methodology; cf. Sauvage et al., 2017)",
+      "units": "1e-9"
+  },
+  "CO_GFAS_1_0_prm_TENA": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Temperate North America with GFAS version 1.0 biomass burning emissions (injection heights are based on MIXED methodology; cf. Sauvage et al., 2017)",
+      "units": "1e-9"
+  },
+  "CO_GFAS_1_0_prm_TOTAL": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide mixing ratio from GFAS version 1.0 biomass burning emissions (injection heights are based on MIXED methodology; cf. Sauvage et al., 2017)",
+      "units": "1e-9"
+  },
+  "CO_GFED_AUST": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Australia and Oceania with GFED4 MIXED injection profile (prm) biomass burning emissions",
+      "units": "1e-9"
+  },
+  "CO_GFED_BOAS": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Boreal Asia with GFED4 MIXED injection profile (prm) biomass burning emissions",
+      "units": "1e-9"
+  },
+  "CO_GFED_BONA": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Boreal North America with GFED4 MIXED injection profile (prm) biomass burning emissions",
+      "units": "1e-9"
+  },
+  "CO_GFED_CEAM": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Central America and Mexico with GFED4 MIXED injection profile (prm) biomass burning emissions",
+      "units": "1e-9"
+  },
+  "CO_GFED_CEAS": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Central Asia with GFED4 MIXED injection profile (prm) biomass burning emissions",
+      "units": "1e-9"
+  },
+  "CO_GFED_EQAS": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Equatorial Asia with GFED4 MIXED injection profile (prm) biomass burning emissions",
+      "units": "1e-9"
+  },
+  "CO_GFED_EURO": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Europe with GFED4 MIXED injection profile (prm) biomass burning emissions",
+      "units": "1e-9"
+  },
+  "CO_GFED_MIDE": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Middle East with GFED4 MIXED injection profile (prm) biomass burning emissions",
+      "units": "1e-9"
+  },
+  "CO_GFED_NHAF": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Northern Hemisphere Africa with GFED4 MIXED injection profile (prm) biomass burning emissions",
+      "units": "1e-9"
+  },
+  "CO_GFED_NHSA": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Northern Hemisphere South America with GFED4 MIXED injection profile (prm) biomass burning emissions",
+      "units": "1e-9"
+  },
+  "CO_GFED_SEAS": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Southeast Asia with GFED4 MIXED injection profile (prm) biomass burning emissions",
+      "units": "1e-9"
+  },
+  "CO_GFED_SHAF": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Southern Hemisphere Africa with GFED4 MIXED injection profile (prm) biomass burning emissions",
+      "units": "1e-9"
+  },
+  "CO_GFED_SHSA": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Southern Hemisphere South America with GFED4 MIXED injection profile (prm) biomass burning emissions",
+      "units": "1e-9"
+  },
+  "CO_GFED_TENA": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Temperate North America with GFED4 MIXED injection profile (prm) biomass burning emissions",
+      "units": "1e-9"
+  },
+  "CO_GFED_TOTAL": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide mixing ratio from GFED4 MIXED injection profile (prm) biomass burning emissions",
+      "units": "1e-9"
+  },
+  "CO_MACC_AUST": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Australia and Oceania with MACCity anthropogenic emissions (injection heights 0-1000m)",
+      "units": "1e-9"
+  },
+  "CO_MACC_BOAS": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Boreal Asia with MACCity anthropogenic emissions (injection heights 0-1000m)",
+      "units": "1e-9"
+  },
+  "CO_MACC_BONA": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Boreal North America with MACCity anthropogenic emissions (injection heights 0-1000m)",
+      "units": "1e-9"
+  },
+  "CO_MACC_CEAM": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Central America and Mexico with MACCity anthropogenic emissions (injection heights 0-1000m)",
+      "units": "1e-9"
+  },
+  "CO_MACC_CEAS": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Central Asia with MACCity anthropogenic emissions (injection heights 0-1000m)",
+      "units": "1e-9"
+  },
+  "CO_MACC_EQAS": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Equatorial Asia with MACCity anthropogenic emissions (injection heights 0-1000m)",
+      "units": "1e-9"
+  },
+  "CO_MACC_EURO": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Europe with MACCity anthropogenic emissions (injection heights 0-1000m)",
+      "units": "1e-9"
+  },
+  "CO_MACC_MIDE": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Middle East with MACCity anthropogenic emissions (injection heights 0-1000m)",
+      "units": "1e-9"
+  },
+  "CO_MACC_NHAF": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Northern Hemisphere Africa with MACCity anthropogenic emissions (injection heights 0-1000m)",
+      "units": "1e-9"
+  },
+  "CO_MACC_NHSA": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Northern Hemisphere South America with MACCity anthropogenic emissions (injection heights 0-1000m)",
+      "units": "1e-9"
+  },
+  "CO_MACC_SEAS": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Southeast Asia with MACCity anthropogenic emissions (injection heights 0-1000m)",
+      "units": "1e-9"
+  },
+  "CO_MACC_SHAF": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Southern Hemisphere Africa with MACCity anthropogenic emissions (injection heights 0-1000m)",
+      "units": "1e-9"
+  },
+  "CO_MACC_SHSA": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Southern Hemisphere South America with MACCity anthropogenic emissions (injection heights 0-1000m)",
+      "units": "1e-9"
+  },
+  "CO_MACC_TENA": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Temperate North America with MACCity anthropogenic emissions (injection heights 0-1000m)",
+      "units": "1e-9"
+  },
+  "CO_MACC_TOTAL": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide mixing ratio from MACCity anthropogenic emissions (injection heights 0-1000m)",
+      "units": "1e-9"
+  },
+  "CO_CEDS2_AUST": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Australia and Oceania with CEDS v2 anthropogenic emissions (injection heights 0-1000m)",
+      "units": "1e-9"
+  },
+  "CO_CEDS2_BOAS": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Boreal Asia with CEDS v2 anthropogenic emissions (injection heights 0-1000m)",
+      "units": "1e-9"
+  },
+  "CO_CEDS2_BONA": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Boreal North America with CEDS v2 anthropogenic emissions (injection heights 0-1000m)",
+      "units": "1e-9"
+  },
+  "CO_CEDS2_CEAM": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Central America and Mexico with CEDS v2 anthropogenic emissions (injection heights 0-1000m)",
+      "units": "1e-9"
+  },
+  "CO_CEDS2_CEAS": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Central Asia with CEDS v2 anthropogenic emissions (injection heights 0-1000m)",
+      "units": "1e-9"
+  },
+  "CO_CEDS2_EQAS": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Equatorial Asia with CEDS v2 anthropogenic emissions (injection heights 0-1000m)",
+      "units": "1e-9"
+  },
+  "CO_CEDS2_EURO": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Europe with CEDS v2 anthropogenic emissions (injection heights 0-1000m)",
+      "units": "1e-9"
+  },
+  "CO_CEDS2_MIDE": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Middle East with CEDS v2 anthropogenic emissions (injection heights 0-1000m)",
+      "units": "1e-9"
+  },
+  "CO_CEDS2_NHAF": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Northern Hemisphere Africa with CEDS v2 anthropogenic emissions (injection heights 0-1000m)",
+      "units": "1e-9"
+  },
+  "CO_CEDS2_NHSA": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Northern Hemisphere South America with CEDS v2 anthropogenic emissions (injection heights 0-1000m)",
+      "units": "1e-9"
+  },
+  "CO_CEDS2_SEAS": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Southeast Asia with CEDS v2 anthropogenic emissions (injection heights 0-1000m)",
+      "units": "1e-9"
+  },
+  "CO_CEDS2_SHAF": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Southern Hemisphere Africa with CEDS v2 anthropogenic emissions (injection heights 0-1000m)",
+      "units": "1e-9"
+  },
+  "CO_CEDS2_SHSA": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Southern Hemisphere South America with CEDS v2 anthropogenic emissions (injection heights 0-1000m)",
+      "units": "1e-9"
+  },
+  "CO_CEDS2_TENA": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide contribution from Temperate North America with CEDS v2 anthropogenic emissions (injection heights 0-1000m)",
+      "units": "1e-9"
+  },
+  "CO_CEDS2_TOTAL": {
+      "standard_name": "mixing_ratio_of_carbon_monoxide_in_air",
+      "long_name": "Carbon monoxide mixing ratio from CEDS v2 anthropogenic emissions (injection heights 0-1000m)",
+      "units": "1e-9"
+  },
+  "surface_press": {
+    "standard_name": "air_pressure_at_surface",
+    "long_name": "Surface pressure",
+    "units": "Pa",
+    "comment": "Model data; interpolated from the surface pressure ECMWF parameter (id=134)"
+  },
+  "vert_wind_speed": {
+    "standard_name": "vertical_air_velocity_expressed_as_tendency_of_pressure",
+    "long_name": "Vertical wind velocity",
+    "units": "m s-1",
+    "comment": "Model data; calculated from the vertical velocity (omega) ECMWF parameter (id=135)"
+  },
+  "air_pot_temp": {
+    "standard_name": "air_potential_temperature",
+    "long_name": "Air potential temperature",
+    "units": "K",
+    "comment": "Model data; calculated from the temperature ECMWF parameter (id=130)"
+  },
+  "orog": {
+    "standard_name": "geopotential_height_at_surface",
+    "long_name": "Orography",
+    "units": "m",
+    "comment": "Model data; calculated from the geopotential ECMWF parameter at the surface (id=129)"
+  },
+  "geopot_ht": {
+    "standard_name": "geopotential_height_at_500_hPa",
+    "long_name": "Geopotential height at 500 hPa",
+    "units": "m",
+    "comment": "Model data; calculated from the geopotential ECMWF parameter at 500 hPa (id=129)"
+  },
+  "zPBL": {
+    "standard_name": "atmosphere_boundary_layer_thickness",
+    "long_name": "Boundary layer height",
+    "units": "m",
+    "comment": "Model data; interpolated from the boundary layer height ECMWF parameter (id=159)"
+  }
+}

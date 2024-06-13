@@ -1,0 +1,11 @@
+Metadata-Version: 2.1
+Name: common
+Version: 0.1
+Summary: common utils
+Author: Pawel Wolff
+Author-email: pawel.wolff@aero.obs-mip.fr
+Requires-Dist: tqdm
+Requires-Dist: numpy
+Requires-Dist: pandas
+Requires-Dist: xarray
+Requires-Dist: dask
