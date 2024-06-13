@@ -346,18 +346,16 @@ EOF
         # | Launch simulation                |
         # +----------------------------------+
         flexpart_output_file="${FLEXPART_OUT_DIR}/${_station_id}-${date}${hour}-${simu_start_date}-${alt_value}.nc"
-        if [ ! -f ${flexpart_output_file} ]; then
-            singularity exec --bind ${DATA_DIR},${ROOT_WDIR} \
-                ${SINGULARITY_FILEPATH} \
-                /usr/local/micromamba/envs/actris_env/bin/python3 ${SRC_DIR}/actris.py \
-                --config ${simulation_config_file} \
-            status=$?
-            if [ ${status} == 0 ]; then
-                outfile=$(find ${wdir} -iname "grid_time*.nc")
-                mv ${outfile} ${flexpart_output_file}
-            else
-                exit 1
-            fi
+        singularity exec --bind ${DATA_DIR},${ROOT_WDIR} \
+            ${SINGULARITY_FILEPATH} \
+            /usr/local/py_envs/actris_env/bin/python ${SRC_DIR}/actris.py \
+            --config ${simulation_config_file}
+        status=$?
+        if [ ${status} == 0 ]; then
+            outfile=$(find ${wdir} -iname "grid_time*.nc")
+            mv ${outfile} ${flexpart_output_file}
+        else
+            exit 1
         fi
     done
 }
@@ -386,7 +384,7 @@ function apply_softio(){
             singularity exec \
                 --bind /o3p,/home/wolp/data,${FLEXPART_OUT_DIR},${SOFTIO_OUT_DIR},$(dirname ${SOFTIO_DATABASE}) \
                 ${SINGULARITY_FILEPATH} \
-                /usr/local/micromamba/envs/softio_env/bin/python3 ${SRC_DIR}/apply-softio.py \
+                /usr/local/py_envs/softio_env/bin/python ${SRC_DIR}/apply-softio.py \
                 -f ${flexpart_output_file} \
                 -n ${_station_id} \
                 -d ${SOFTIO_OUT_DIR} \
@@ -422,8 +420,9 @@ function create_footprints_image(){
             singularity exec \
                 --bind ${FLEXPART_OUT_DIR},$(dirname ${FOOTPRINTS_DATABASE}) \
                 ${SINGULARITY_FILEPATH} \
-                /usr/local/micromamba/envs/footprints_env/bin/python3 ${SRC_DIR}/create_footprint.py \
+                /usr/local/py_envs/footprints_env/bin/python ${SRC_DIR}/create-footprints.py \
                 -f ${flexpart_output_file} \
+                -n ${_station_id} \
                 -o ${FOOTPRINTS_DATABASE}
         done
     else
@@ -452,10 +451,10 @@ function get_station_info(){
     _station_coords="${_station_lat} ${_station_lon}"
     readarray -t arr < <(jq -r '.[].release_heights' "${STATIONS_CONF}")
     _station_alts=${arr[${index}]}
-    echo "_station_id      : ${_station_id}"
-    echo "_station_name    : ${_station_name}"
-    echo "_station_coords  : ${_station_coords}"
-    echo "_station_alts    : ${_station_alts}"  
+    # echo "_station_id      : ${_station_id}"
+    # echo "_station_name    : ${_station_name}"
+    # echo "_station_coords  : ${_station_coords}"
+    # echo "_station_alts    : ${_station_alts}"  
 }
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
