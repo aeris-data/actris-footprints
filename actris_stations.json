@@ -1,0 +1,50 @@
+[
+  {
+    "short_name":"PUY",
+    "long_name":"Puy de Dôme",
+    "longitude":2.964886,
+    "latitude":45.772223,
+    "altitude":1465,
+    "release_heights":"500 1500"
+  },
+  {
+    "short_name":"SAC",
+    "long_name":"SIRTA Atmospheric Research Obs",
+    "longitude":2.1588888889,
+    "latitude":48.7086111,
+    "altitude":162,
+    "release_heights":"500"
+  },
+  {
+    "short_name":"PDM",
+    "long_name":"Pic du Midi",
+    "longitude":0.141944,
+    "latitude":42.936667,
+    "altitude":2877,
+    "release_heights":"500 1000"
+  },
+  {
+    "short_name":"OPE",
+    "long_name":"Observatoire Perenne de l'Environnement",
+    "longitude":5.50555556,
+    "latitude":48.562222,
+    "altitude":392,
+    "release_heights":"500"
+  },
+  {
+    "short_name":"RUN",
+    "long_name":"La Réunion – Maïdo atmospheric observatory",
+    "longitude":55.383006,
+    "latitude":-21.076449,
+    "altitude":2160,
+    "release_heights":"500 1500 2000"
+  },
+  {
+    "short_name":"LTO",
+    "long_name":"Lamto",
+    "longitude":-5.03333333,
+    "latitude":6.216666667,
+    "altitude":105,
+    "release_heights":"100 500 1500"
+  }
+]
