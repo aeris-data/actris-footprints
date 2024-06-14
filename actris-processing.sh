@@ -53,7 +53,7 @@ function help() {
     echo "###   ${bold}-h|--help${normal}        Show this help message and exit"
     echo "###   ${bold}--flexpart${normal}       Activate FLEXPART simulation"
     echo "###   ${bold}--softio${normal}         Activate SOFT-io computations"
-    echo "###   ${bold}--footprint${normal}      Activate creation of the footprint image"
+    echo "###   ${bold}--footprints${normal}     Activate creation of the footprint image"
     echo "###"
     echo "### Arguments:"
     echo "###   ${bold}-n        station_name_code${normal}   ID code (short_name) of one of the stations from your configuration file"                                   
@@ -442,7 +442,7 @@ function get_station_info(){
         fi
     done
     _station_id=${STATION_CODE}
-    readarray -t arr < <(jq -r '.[].long_name' "${STATIONS_CONF}")
+    readarray -t arr < <(jq -r '.[].standard_name' "${STATIONS_CONF}")
     _station_name=${arr[${index}]}
     arr=($(cat ${STATIONS_CONF} | jq '.[].latitude'))
     _station_lat=${arr[${index}]}
@@ -493,7 +493,7 @@ SOFTIO_FLAG=0
 FLEXPART_FLAG=0
 FOOTPRINTS_FLAG=0
 
-opts=$(getopt --longoptions "help,conf:,softio,flexpart,footprint" --name "$(basename "$0")" --options "h,n:,d:,c:" -- "$@")
+opts=$(getopt --longoptions "help,conf:,softio,flexpart,footprints" --name "$(basename "$0")" --options "h,n:,d:,c:" -- "$@")
 eval set -- "$opts"
 
 while [[ $# -gt 0 ]]; do
@@ -504,7 +504,7 @@ while [[ $# -gt 0 ]]; do
         -h|--help) shift; help; exit 0;;
         --softio) shift; SOFTIO_FLAG=1;;
         --flexpart) shift; FLEXPART_FLAG=1;;
-        --footprint) shift; FOOTPRINTS_FLAG=1;;
+        --footprints) shift; FOOTPRINTS_FLAG=1;;
         \?) shift; error "Unrecognized options"; exit 1; shift;;
         --) break;;
     esac

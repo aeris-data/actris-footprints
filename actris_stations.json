@@ -1,6 +1,7 @@
 [
   {
     "short_name":"PUY",
+    "standard_name":"PuydeDome",
     "long_name":"Puy de Dôme",
     "longitude":2.964886,
     "latitude":45.772223,
@@ -9,6 +10,7 @@
   },
   {
     "short_name":"SAC",
+    "standard_name":"SIRTA_AtmosphericResearchObs",
     "long_name":"SIRTA Atmospheric Research Obs",
     "longitude":2.1588888889,
     "latitude":48.7086111,
@@ -17,6 +19,7 @@
   },
   {
     "short_name":"PDM",
+    "standard_name":"PicDuMidi",
     "long_name":"Pic du Midi",
     "longitude":0.141944,
     "latitude":42.936667,
@@ -25,6 +28,7 @@
   },
   {
     "short_name":"OPE",
+    "standard_name":"ObservatoirePerenneEnvironnement",
     "long_name":"Observatoire Perenne de l'Environnement",
     "longitude":5.50555556,
     "latitude":48.562222,
@@ -33,6 +37,7 @@
   },
   {
     "short_name":"RUN",
+    "standard_name":"MaidoAtmosphericObservatory",
     "long_name":"La Réunion – Maïdo atmospheric observatory",
     "longitude":55.383006,
     "latitude":-21.076449,
@@ -41,6 +46,7 @@
   },
   {
     "short_name":"LTO",
+    "standard_name":"Lamto",
     "long_name":"Lamto",
     "longitude":-5.03333333,
     "latitude":6.216666667,

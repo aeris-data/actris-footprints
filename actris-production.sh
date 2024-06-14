@@ -100,19 +100,20 @@ function get_source_dir(){
 }
 
 function main(){
+    _simu_date=$1
     get_station_ids
     get_source_dir
     jobIDs=""
     # for station in "PDM" "PUY" "RUN" "LTO" "SAC" "OPE"; do
     for station in ${station_ids[@]}; do
-        log_filepath="${LOGS_DIR}/${station}/${station}-${date}.out"
+        log_filepath="${LOGS_DIR}/${station}/${station}-${_simu_date}.out"
         if [ ! -d "$(dirname ${log_filepath})" ]; then mkdir -p "$(dirname ${log_filepath})"; fi
-        info "Submitting job ${station} ${date}, check log output in the ${log_filepath}"
+        info "Submitting job ${station} ${_simu_date}, check log output in the ${log_filepath}"
         id=$(/usr/local/slurm/bin/sbatch \
-            --job-name="flexpart-${station}-${date}" \
+            --job-name="flexpart-${station}-${_simu_date}" \
             --output="${log_filepath}" \
             --error="${log_filepath}" \
-            --wrap="${SRC_DIR}/actris-processing.sh -n ${station} -d ${date} -c ${PATHS_CONF_FILEPATH} --flexpart")
+            --wrap="${SRC_DIR}/actris-processing.sh -n ${station} -d ${_simu_date} -c ${PATHS_CONF_FILEPATH} --flexpart")
         id="${id//[!0-9]/}"
         if [ -z ${jobIDs} ]; then
             jobIDs="${id}"
@@ -145,42 +146,41 @@ function main(){
         job_state=$(echo ${sacct_res} | cut -d'|' -f2)
         station_name=$(echo ${job_name} | cut -d'-' -f2)
         if [[ "${job_state}" == "COMPLETED" ]]; then
-            # echo "${date};${station_name};flexpart;ok" >> ${catalogue_filepath}
-            echo "{'processing_date':'$(date +'%d/%m/%Y %H:%M:%S %Z')', 'station_id':'${station_name}', 'simulation_date':'${date}', 'log_filepath':'${log_filepath}', 'processing_step':'flexpart', 'status':0}" >> ${LOG_CATALOGUE_FILEPATH}
-            log_filepath="${LOGS_DIR}/${station_name}/${station_name}-${date}.out"
+            echo "{'processing_date':'$(date +'%d/%m/%Y %H:%M:%S %Z')', 'station_id':'${station_name}', 'simulation_date':'${_simu_date}', 'log_filepath':'${log_filepath}', 'processing_step':'flexpart', 'status':0}" >> ${LOG_CATALOGUE_FILEPATH}
+            log_filepath="${LOGS_DIR}/${station_name}/${station_name}-${_simu_date}.out"
 
-            info "SOFT-io processing for ${station_name} ${date}, log output is in ${log_filepath}"
+            info "SOFT-io processing for ${station_name} ${_simu_date}, log output is in ${log_filepath}"
             /usr/local/slurm/bin/srun \
-                --job-name="softio-${station_name}-${date}" \
+                --job-name="softio-${station_name}-${_simu_date}" \
                 --output="${log_filepath}" \
                 --error="${log_filepath}" \
                 --open-mode=append \
-                ${SRC_DIR}/actris-processing.sh -n ${station_name} -d ${date} -c ${PATHS_CONF_FILEPATH} --softio
+                ${SRC_DIR}/actris-processing.sh -n ${station_name} -d ${_simu_date} -c ${PATHS_CONF_FILEPATH} --softio
             status=$?
             if [ ${status} == 0 ]; then
-                echo "{'processing_date':'$(date +'%d/%m/%Y %H:%M:%S %Z')', 'station_id':'${station_name}', 'simulation_date':'${date}', 'log_filepath':'${log_filepath}', 'processing_step':'softio', 'status':0}" >> ${LOG_CATALOGUE_FILEPATH}
+                echo "{'processing_date':'$(date +'%d/%m/%Y %H:%M:%S %Z')', 'station_id':'${station_name}', 'simulation_date':'${_simu_date}', 'log_filepath':'${log_filepath}', 'processing_step':'softio', 'status':0}" >> ${LOG_CATALOGUE_FILEPATH}
             else
-                echo "{'processing_date':'$(date +'%d/%m/%Y %H:%M:%S %Z')', 'station_id':'${station_name}', 'simulation_date':'${date}', 'log_filepath':'${log_filepath}', 'processing_step':'softio', 'status':1}" >> ${LOG_CATALOGUE_FILEPATH}
+                echo "{'processing_date':'$(date +'%d/%m/%Y %H:%M:%S %Z')', 'station_id':'${station_name}', 'simulation_date':'${_simu_date}', 'log_filepath':'${log_filepath}', 'processing_step':'softio', 'status':1}" >> ${LOG_CATALOGUE_FILEPATH}
             fi
 
-            info "Footprints image processing for ${station_name} ${date}, log output is in ${log_filepath}"
+            info "Footprints image processing for ${station_name} ${_simu_date}, log output is in ${log_filepath}"
             /usr/local/slurm/bin/srun \
-                --job-name="footprints-${station_name}-${date}" \
+                --job-name="footprints-${station_name}-${_simu_date}" \
                 --output="${log_filepath}" \
                 --error="${log_filepath}" \
                 --open-mode=append \
-                ${SRC_DIR}/actris-processing.sh -n ${station_name} -d ${date} -c ${PATHS_CONF_FILEPATH} --footprint
+                ${SRC_DIR}/actris-processing.sh -n ${station_name} -d ${_simu_date} -c ${PATHS_CONF_FILEPATH} --footprints
             status=$?
             if [ ${status} == 0 ]; then
-                echo "{'processing_date':'$(date +'%d/%m/%Y %H:%M:%S %Z')', 'station_id':'${station_name}', 'simulation_date':'${date}', 'log_filepath':'${log_filepath}', 'processing_step':'footprints', 'status':0}" >> ${LOG_CATALOGUE_FILEPATH}
+                echo "{'processing_date':'$(date +'%d/%m/%Y %H:%M:%S %Z')', 'station_id':'${station_name}', 'simulation_date':'${_simu_date}', 'log_filepath':'${log_filepath}', 'processing_step':'footprints', 'status':0}" >> ${LOG_CATALOGUE_FILEPATH}
             else
-                echo "{'processing_date':'$(date +'%d/%m/%Y %H:%M:%S %Z')', 'station_id':'${station_name}', 'simulation_date':'${date}', 'log_filepath':'${log_filepath}', 'processing_step':'footprints', 'status':1}" >> ${LOG_CATALOGUE_FILEPATH}
+                echo "{'processing_date':'$(date +'%d/%m/%Y %H:%M:%S %Z')', 'station_id':'${station_name}', 'simulation_date':'${_simu_date}', 'log_filepath':'${log_filepath}', 'processing_step':'footprints', 'status':1}" >> ${LOG_CATALOGUE_FILEPATH}
             fi
         elif [[ "${job_state}" == "FAILED" ]]; then
             warning "FLEXPART simulation has failed, no SOFT-IO nor footprints processing were launched. Check ${log_filepath} for more information"
-            echo "{'processing_date':'$(date +'%d/%m/%Y %H:%M:%S %Z')', 'station_id':'${station_name}', 'simulation_date':'${date}', 'log_filepath':'${log_filepath}', 'processing_step':'flexpart', 'status':1}" >> ${LOG_CATALOGUE_FILEPATH}
-            echo "{'processing_date':'$(date +'%d/%m/%Y %H:%M:%S %Z')', 'station_id':'${station_name}', 'simulation_date':'${date}', 'log_filepath':'${log_filepath}', 'processing_step':'softio', 'status':1}" >> ${LOG_CATALOGUE_FILEPATH}
-            echo "{'processing_date':'$(date +'%d/%m/%Y %H:%M:%S %Z')', 'station_id':'${station_name}', 'simulation_date':'${date}', 'log_filepath':'${log_filepath}', 'processing_step':'footprints', 'status':1}" >> ${LOG_CATALOGUE_FILEPATH}
+            echo "{'processing_date':'$(date +'%d/%m/%Y %H:%M:%S %Z')', 'station_id':'${station_name}', 'simulation_date':'${_simu_date}', 'log_filepath':'${log_filepath}', 'processing_step':'flexpart', 'status':1}" >> ${LOG_CATALOGUE_FILEPATH}
+            echo "{'processing_date':'$(date +'%d/%m/%Y %H:%M:%S %Z')', 'station_id':'${station_name}', 'simulation_date':'${_simu_date}', 'log_filepath':'${log_filepath}', 'processing_step':'softio', 'status':1}" >> ${LOG_CATALOGUE_FILEPATH}
+            echo "{'processing_date':'$(date +'%d/%m/%Y %H:%M:%S %Z')', 'station_id':'${station_name}', 'simulation_date':'${_simu_date}', 'log_filepath':'${log_filepath}', 'processing_step':'footprints', 'status':1}" >> ${LOG_CATALOGUE_FILEPATH}
         fi
     done
 }
@@ -240,14 +240,18 @@ if [ "${status}" != 0 ]; then exit ${status}; fi
 if [ -z ${DATES_FILEPATH} ]; then
     today=$(date +%s)
     result=$((today - ${DELAY_N_DAYS} * 86400))
-    date=$(date -d @$result "+%Y%m%d")${FLEXPART_HOUR}
-    info "Launching simulation for ${date}"
-    main
+    simu_date=$(date -d @$result "+%Y%m%d")${FLEXPART_HOUR}
+    info "Launching simulation for ${simu_date}"
+    main ${simu_date}
 else
     warning "List of simulation dates/hours was provided by the user, FLEXPART_HOUR and DELAY_N_DAYS from the configuration file will not be used."
+    info "Provided dates are :"
+    while IFS= read -r simu_date; do
+        info ${simu_date}
+    done < "${DATES_FILEPATH}"
     info "Going through the list of provided simulation dates..."
-    while IFS= read -r date; do
-        info "Launching simulation for ${date}"
-        main
+    while IFS= read -r simu_date; do
+        info "Launching simulation for ${simu_date}"
+        main ${simu_date}
     done < "${DATES_FILEPATH}"
 fi
