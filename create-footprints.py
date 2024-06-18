@@ -57,7 +57,7 @@ def create_footprints(flexpart_output: str, output_file_with_footprints: str, st
     ds = get_footprint_data(flexpart_output, station_short_name)
     if os.path.exists(output_file_with_footprints):
         with xr.open_zarr(output_file_with_footprints) as zarr_ds:
-            output = xr.merge([zarr_ds, ds])
+            output = xr.merge([zarr_ds, ds], compat="override")
     else:
         output = ds
     encoding = {}
