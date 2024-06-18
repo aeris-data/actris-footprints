@@ -350,12 +350,11 @@ EOF
             ${SINGULARITY_FILEPATH} \
             /usr/local/py_envs/actris_env/bin/python ${SRC_DIR}/actris.py \
             --config ${simulation_config_file}
-        status=$?
-        if [ ${status} == 0 ]; then
-            outfile=$(find ${wdir} -iname "grid_time*.nc")
-            mv ${outfile} ${flexpart_output_file}
+        _flexpart_native_output_file=$(find ${wdir}/output -iname "grid_time*.nc")
+        if [ -f ${_flexpart_native_output_file} ]; then
+            mv ${_flexpart_native_output_file} ${flexpart_output_file}
         else
-            exit 1
+            error "Something went wrong with FLEXPART simulation..."
         fi
     done
 }
