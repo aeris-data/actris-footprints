@@ -73,7 +73,8 @@ function help() {
 }
 
 function get_station_ids(){
-    while read -r line; do
+	exec 2< "${PATHS_CONF_FILEPATH}"
+    while read -r line <&2; do
         var_name=$(echo ${line} | cut -d= -f1)
         var_value=$(echo ${line} | cut -d= -f2)
         if [ "${var_name}" == "STATIONS_CONF" ]; then
@@ -81,14 +82,16 @@ function get_station_ids(){
             station_ids=($(cat ${var_value} | jq '.[].short_name'))
             break
         fi
-    done < ${PATHS_CONF_FILEPATH}
+    done
     for ii in "${!station_ids[@]}"; do
         station_ids[${ii}]=${station_ids[${ii}]//\"/""}
     done
+    exec 2<&-
 }
 
 function get_source_dir(){
-    while read -r line; do
+	exec 2< "${PATHS_CONF_FILEPATH}"
+    while read -r line <&2; do
         var_name=$(echo ${line} | cut -d= -f1)
         var_value=$(echo ${line} | cut -d= -f2)
         if [ "${var_name}" == "SRC_DIR" ]; then
@@ -96,7 +99,8 @@ function get_source_dir(){
             SRC_DIR=${var_value}
             break
         fi
-    done < ${PATHS_CONF_FILEPATH}
+    done
+    exec 2<&-
 }
 
 function main(){
@@ -221,7 +225,7 @@ function check_args(){
     return ${status}
 }
 
-opts=$(getopt --longoptions "help,conf:" --name "$(basename "$0")" --options "h,d:" -- "$@")
+opts=$(getopt --longoptions "help,conf:" --name "$(basename "$0")" --options "h,d:,c:" -- "$@")
 eval set -- "$opts"
 
 while [[ $# -gt 0 ]]; do
@@ -246,12 +250,14 @@ if [ -z ${DATES_FILEPATH} ]; then
 else
     warning "List of simulation dates/hours was provided by the user, FLEXPART_HOUR and DELAY_N_DAYS from the configuration file will not be used."
     info "Provided dates are :"
-    while IFS= read -r simu_date; do
-        info ${simu_date}
-    done < "${DATES_FILEPATH}"
+    #while IFS= read -r simu_date; do
+    #    info ${simu_date}
+    #done < "${DATES_FILEPATH}"
     info "Going through the list of provided simulation dates..."
-    while IFS= read -r simu_date; do
+    exec 3< "${DATES_FILEPATH}"
+    while IFS= read -r simu_date <&3; do
         info "Launching simulation for ${simu_date}"
         main ${simu_date}
-    done < "${DATES_FILEPATH}"
+    done
+    exec 3<&-
 fi
