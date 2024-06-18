@@ -690,8 +690,5 @@ if __name__=="__main__":
     LOGGER.info("Launching FLEXPART")
 
     status = run_bash_command("./FLEXPART", wdir)
-    if status==1:
-        LOGGER.error("Something went wrong...")
-        sys.exit(1)
 
     # output_netcdf = glob.glob(f"{wdir}/output/*.nc")[0]
